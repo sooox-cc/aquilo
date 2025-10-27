@@ -8,6 +8,9 @@ Aquilo is not designed for growth hacking, user profiling, or behavioral analyti
 
 Because when communities are no longer about coming together, what's the point in having them?
 
+## Roadmap
+[Hydraulisc Blog/Aquilo Roadmap](https://blog.hydraulisc.net/blog/aquilo-roadmap-road-to-community)
+
 ## Features
 - Free and Open Source
 - Self-hostable by design
