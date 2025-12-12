@@ -16,3 +16,5 @@ Because when communities are no longer about coming together, what's the point i
 - Self-hostable by design
 - Hydraulisc authentication built-in
 - No hidden metrics, ads, costs, or profiling
+
+<!-- Hello socks. C Wut I Did Here? -->
