@@ -1,0 +1,14 @@
+{
+  "hostPort": 8000,
+  "sessionKey": "test_session_key",
+  "protocol": "https",
+  "siteDomain": "aquilo.hydraulisc.net",
+  "title": "Aquilo",
+  "kofiURL": "https://ko-fi.com/supportkofi",
+  "hydrauliscAuth": false,
+  "hydrauliscCallback": "http://127.0.0.1:8000/oauth/callback",
+  "hydrauliscAuthClient": null,
+  "hydrauliscAuthToken": null,
+  "discord_invite": null,
+  "aquilo_invite": "https://aquilo.hydraulisc.net"
+}

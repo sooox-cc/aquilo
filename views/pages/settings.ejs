@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Aquilo</title>
+    <link rel="shortcut icon" href="/assets/favicon.webp" type="image/x-icon">
+    <link rel="icon" type="image/png" href="/assets/favicon.webp">
+    <link rel="stylesheet" href="/css/settingsStyles.css">
+</head>
+<body>
+    <nav class="settings_nav">
+        <a href="#" tabindex="-1" data-section="account" class="active navlink">Account</a>
+        <a href="#" tabindex="-1" data-section="profile" class="navlink">Profile</a>
+        <a href="#" tabindex="-1" data-section="theme" class="navlink">Theme</a>
+        <a href="#" tabindex="-1" data-section="notifications" class="navlink">Notifications</a>
+        <a href="#" tabindex="-1" data-section="language" class="navlink">Language</a>
+        <a href="#" tabindex="-1" data-section="features" class="navlink">Features</a>
+        <a href="#" tabindex="-1" data-section="feedback" class="navlink">Feedback</a>
+        <a href="https://github.com/Hydraulisc/Aquilo" tabindex="-1" target="_blank">Github</a>
+        <a href="<%- kofiURL %>" tabindex="-1" target="_blank">Donate</a>
+        <div style="padding: 14px;">
+            <p style="font-size: 10px; color: var(--accent-color);"><%- version %></p>
+        </div>
+    </nav>
+    <main class="settings_content">
+        <section id="account" class="settings_section">
+            <h1>Account Settings</h1>
+            <p>(placeholder)</p>
+        </section>
+        <section id="profile" class="settings_section" style="display:none;">
+            <h1>Profile</h1>
+            <p>(placeholder)</p>
+        </section>
+        <section id="theme" class="settings_section" style="display:none;">
+            <div class="settings_container">
+                <div class="settings_scroll">
+                    <div class="settings_order">
+                        <h1>Theme Settings</h1>
+                        <div>
+                            <div class="settings_title_display">
+                                <label for="theme-select">Appearance:</label>
+                                <select id="theme-select">
+                                    <option value="dark" selected>Dark</option>
+                                    <option value="light">Light</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            <hr>
+                            <div class="settings_subsection">
+                                <h3>Theme Overrides <sup style="font-size: 9px; color: red; text-decoration: underline;">BETA</sup></h3>
+                                <div style="gap: 8px; display: flex; margin: 18px 0px 8px; display: none;"></div>
+                                <!-- Note: These each require their own background-color override; making them globals would require vodoo magic beyond my understanding -->
+                                <div class="theme_overrides">
+                                    <div class="theme_override" style="background-color: var(--bg-color);">
+                                        <span class="theme_title">background</span>
+                                        <div class="theme_picker_container">
+                                            <div class="theme_picker">
+                                                <input class="theme_input" type="color" id="bg-color" value="#100E09">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="theme_override" style="background-color: var(--bg-secondary);">
+                                        <span class="theme_title">secondary background</span>
+                                        <div class="theme_picker_container">
+                                            <div class="theme_picker">
+                                                <input class="theme_input" type="color" id="bg-secondary" value="#0B0B0Baa">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="theme_override" style="background-color: var(--text-color);">
+                                        <span class="theme_title" style="color: var(--bg-color);">Text</span>
+                                        <div class="theme_picker_container">
+                                            <div class="theme_picker">
+                                                <input class="theme_input" type="color" id="text-color" value="#d7d9e0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="theme_override" style="background-color: var(--text-secondary);">
+                                        <span class="theme_title" style="color: var(--bg-color);">Text Secondary</span>
+                                        <div class="theme_picker_container">
+                                            <div class="theme_picker">
+                                                <input class="theme_input" type="color" id="text-secondary" value="#acadb3">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="theme_override" style="background-color: var(--accent-color);">
+                                        <span class="theme_title" style="color: var(--bg-color);">Accent Color</span>
+                                        <div class="theme_picker_container">
+                                            <div class="theme_picker">
+                                                <input class="theme_input" type="color" id="accent-color" value="#8086d4">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="theme_override" style="background-color: var(--accent-secondary);">
+                                        <span class="theme_title">Accent Secondary</span>
+                                        <div class="theme_picker_container">
+                                            <div class="theme_picker">
+                                                <input class="theme_input" type="color" id="accent-secondary" value="#5464c7">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="theme_override" style="background-color: var(--accent-terciary);">
+                                        <span class="theme_title">Accent Terciary</span>
+                                        <div class="theme_picker_container">
+                                            <div class="theme_picker">
+                                                <input class="theme_input" type="color" id="accent-terciary" value="#5667c7ae">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="theme_override" style="background-color: var(--nav-bg);">
+                                        <span class="theme_title">Nav Background</span>
+                                        <div class="theme_picker_container">
+                                            <div class="theme_picker">
+                                                <input class="theme_input" type="color" id="nav-bg" value="#181512">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="theme_override" style="background-color: var(--button-bg);">
+                                        <span class="theme_title" style="color: var(--bg-color);">Button Background</span>
+                                        <div class="theme_picker_container">
+                                            <div class="theme_picker">
+                                                <input class="theme_input" type="color" id="button-bg" value="#8086d4">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="theme_override" style="background-color: var(--button-text);">
+                                        <span class="theme_title" style="color: var(--bg-color);">Button Text</span>
+                                        <div class="theme_picker_container">
+                                            <div class="theme_picker">
+                                                <input class="theme_input" type="color" id="button-text" value="#d7d9e0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="button" id="apply-custom">Apply Custom</button>
+                                <button class="button" onclick="exportTheme()">Export Theme</button>
+                                <label for="theme-import" style="cursor: pointer;">Import Theme</label>
+                                <input type="file" id="theme-import" accept="application/json" style="display: none;" onchange="importTheme(this.files[0])"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="notifications" class="settings_section" style="display:none;">
+            <h1>Notifications</h1>
+            <p>(placeholder)</p>
+        </section>
+        <section id="language" class="settings_section" style="display:none;">
+            <h1>Language</h1>
+            <p>(placeholder)</p>
+        </section>
+        <section id="features" class="settings_section" style="display:none;">
+            <h1>Features</h1>
+            <p>(placeholder)</p>
+        </section>
+        <section id="feedback" class="settings_section" style="display:none;">
+            <h1>Feedback</h1>
+            <p>(placeholder)</p>
+        </section>
+
+    </main>
+    
+    <script src="/js/settingsNav.js" defer></script>
+</body>
+</html>

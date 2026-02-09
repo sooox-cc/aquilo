@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome | Aquilo</title>
+    <link rel="shortcut icon" href="/assets/favicon.webp" type="image/x-icon">
+    <link rel="icon" type="image/png" href="/assets/favicon.webp">
+    <link rel="stylesheet" href="/css/welcomeStyles.css">
+    <script src="/js/themeSelector.js"></script>
+</head>
+<body>
+    <section class="welcome_page_container">
+        <div class="welcome_navbar">
+            <div class="navbar_buttons">
+                <a href="https://blog.hydraulisc.net/blog/aquilo-roadmap-road-to-community">Roadmap</a>
+                <% if(!aquiloURL || aquiloURL === 'null' || aquiloURL === '') { %>
+                    <span style="display: none;">Nothing to see here :)</span>
+                <% } else { %>
+                    <a href="<%- aquiloURL %>" target="_blank" rel="noopener noreferrer">Community</a>
+                <% } %>
+            </div>
+            <div class="navbar_icon">
+                <img src="/assets/1000044733-lowres.png" alt="Aquilo Logo">
+            </div>
+        </div>
+        <div class="mobile_welcome_navbar">
+            <div class="navbar_icon">
+                <img src="/assets/1000044733-lowres.png" alt="Aquilo Logo">
+            </div>
+            <div class="navbar_buttons">
+                <a href="https://blog.hydraulisc.net/blog/aquilo-roadmap-road-to-community">Roadmap</a>
+                <% if(!aquiloURL || aquiloURL === 'null' || aquiloURL === '') { %>
+                    <span style="display: none;">Nothing to see here :)</span>
+                <% } else { %>
+                    <a href="<%- aquiloURL %>" target="_blank" rel="noopener noreferrer">Community</a>
+                <% } %>
+            </div>
+        </div>
+        <div class="welcome_banner">
+            <div class="welcome_banner_left">
+                <div class="welcome_container">
+                    <h1>Welcome to Aquilo!</h1>
+                    <div class="text_rotator_container">
+                        <h2 class="text_rotator_header">
+                            Where 
+                            <span class="text_rotator">
+                                <span class="rotator_el">privacy matters</span>
+                                <span class="rotator_el">communication is key</span>
+                                <span class="rotator_el">nothing is hidden</span>
+                                <span class="rotator_el">communities <span class="underline">come together</span></span>
+                            </span>
+                        </h2>
+                    </div>
+                    <div class="welcome_buttons_container">
+                        <a href="/register" class="welcome_button_primary">join the beta!</a>
+                        <!--
+                            <a href="/login" class="welcome_button_secondary">Register</a>
+                         -->
+                    </div>
+                </div>
+            </div>
+            <div class="welcome_banner_right">
+                <img src="/assets/client_demo.png">
+            </div>
+        </div>
+    </section>
+    <section class="welcome_page_container" id="showcaseDemo">
+        <div class="welcome_banner">
+            <div class="welcome_banner_left">
+                <div class="welcome_container">
+                    <h2>Simple, powerful, customizable.</h2>
+                    <p style="max-width: 365px;">Aquilo is built with simplicity and robust customization in mind. Don't like the colour palette? Don't like the layout? <span class="underline">Change it</span>.</p>
+                </div>
+            </div>
+            <div class="welcome_banner_right">
+                <img src="/assets/client_comparison.webp">
+            </div>
+        </div>
+    </section>
+    <section class="welcome_page_container" id="fossifyDemo">
+        <div class="welcome_banner">
+            <div class="welcome_banner_left">
+                <div class="welcome_container">
+                    <h2>Open Source. Free, Forever.</h2>
+                    <p style="max-width: 365px;">Aquilo is developed transparently and licensed for everyone to study, modify, and improve.<br>There are no locked features or paid tiers — only open standards and clear intent.</p>
+                    <a href="https://github.com/Hydraulisc/Aquilo" target="_blank" class="welcome_button_secondary">View on GitHub</a>
+                </div>
+            </div>
+            <div class="welcome_banner_right">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 80">
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Inter, sans-serif" font-size="28" fill="var(--text-color)">
+                        Aquilo 
+                        <tspan fill="var(--accent-color)">♡</tspan> 
+                        <tspan font-family="JetBrains Mono, monospace">&lt;FOSS/&gt;</tspan>
+                    </text>
+                </svg>
+            </div>
+        </div>
+    </section>
+    <section class="welcome_page_container" id="devicesDemo">
+        <div class="welcome_banner">
+            <div class="welcome_banner_left">
+                <div class="welcome_container">
+                    <h2>Simply available everywhere.</h2>
+                    <p style="max-width: 365px;">We use PWA technologies to create a native app-like experience on every device — without having to download it to your device.</p>
+                    <a href="https://github.com/Hydraulisc/Aquilo" target="_blank" class="welcome_button_secondary">View on GitHub</a>
+                </div>
+            </div>
+            <div class="welcome_banner_right">
+                <img src="/assets/devices_demo.png" style="border: none !important;">
+            </div>
+        </div>
+    </section>
+    <%- include('../partials/welcomingFooter') %>
+</body>
+</html>

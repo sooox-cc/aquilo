@@ -1,0 +1,78 @@
+.unread-divider {
+    margin: 0 .65rem 0 .15rem;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    display: flex;
+    border-top: 1px solid var(--accent-color);
+}
+
+.unread-text {
+    background-color: var(--accent-color);
+    align-items: center;
+    border-left: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: var(--text-color);
+    display: flex;
+    font-size: 11px;
+    height: 13px;
+    justify-content: center;
+    line-height: 9px;
+    padding: 4px;
+    position: relative;
+    text-transform: uppercase;
+    top: -7px;
+}
+
+.jCxwsP {
+    display: flex;
+    padding: 0.125rem;
+    flex-direction: row;
+    padding-inline-end: 16px;
+    margin-top: 12px;
+}
+
+.csvICB {
+    width: 62px;
+    display: flex;
+    flex-shrink: 0;
+    padding-top: 2px;
+    flex-direction: row;
+    -moz-box-pack: center;
+    justify-content: center;
+}
+
+.jkmmZm {
+    position: relative;
+    min-width: 0px;
+    -moz-box-flex: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    -moz-box-pack: center;
+    justify-content: center;
+}
+
+.author {
+    overflow: hidden;
+    cursor: default;
+    font-weight: 600 !important;
+    display: -webkit-box;
+    -moz-box-orient: vertical;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+.date-time {
+    cursor: default;
+    flex-shrink: 0;
+    gap: 4px;
+    font-size: 11px;
+    display: inline-flex;
+    color: var(--text-secondary);
+}
+
+.textContent {
+    margin: 0;
+}

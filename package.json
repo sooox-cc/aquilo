@@ -1,0 +1,34 @@
+{
+  "name": "aquilo",
+  "version": "0.1.0",
+  "description": "Light. Fast. Untouchable.",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hydraulisc/aquilo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Hydraulisc/aquilo/issues"
+  },
+  "homepage": "https://github.com/Hydraulisc/aquilo#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cookie-parser": "^1.4.7",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "nodemon": "^3.1.10",
+    "sortablejs": "^1.15.6",
+    "sqlite3": "^5.1.7",
+    "winston": "^3.18.3",
+    "xss": "^1.0.15"
+  }
+}
