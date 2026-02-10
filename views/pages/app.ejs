@@ -53,7 +53,7 @@
                                                             <a href="/server/<%- server.id %>">
                                                                 <svg width="42" height="42" viewBox="0 0 32 32">
                                                                     <foreignObject x="0" y="0" width="32" height="32">
-                                                                        <img src="<%- server.icon %>" class="navSelectIcons">
+                                                                        <img src="<%- server.icon || '/assets/1759430838.png' %>" class="navSelectIcons">
                                                                     </foreignObject>
                                                                 </svg>
                                                             </a>
@@ -142,7 +142,7 @@
                         <div class="jXEHHp channelsHeader">
                             <div class="container">
                                 <p class="title">
-                                    Aquilo Support
+                                    <%- serverName || 'Server' %>
                                 </p>
                                 <a href="#server-settings" style="margin-top: 5px;">
                                     <svg viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="var(--text-color)" width="20px" height="20px">
@@ -158,14 +158,9 @@
                             </div>
                         </div>
                         <div class="channelsSidebar cJgFyc">
-                            <a>
-                                <div class="_item_1avxi_1 _compact_1avxi_19" style="background: var(--accent-color) !important;">
-                                    welcome
-                                </div>
-                            </a>
                             <% for (const channel of channels) { %>
-                                <a>
-                                    <div class="_item_1avxi_1 _compact_1avxi_19">
+                                <a href="/server/<%= serverId %>/channel/<%= channel.id %>">
+                                    <div class="_item_1avxi_1 _compact_1avxi_19"<% if (channel.id === channelId) { %> style="background: var(--accent-color) !important;"<% } %>>
                                         <%- channel.name %>
                                     </div>
                                 </a>
@@ -177,7 +172,7 @@
                     <div class="hpNYLK">
                         <div class="fPzJRX">
                             <div class="channelHeader cnyIwU">
-                                <span class="channelTitle">welcome</span>
+                                <span class="channelTitle"><%- channelName || 'welcome' %></span>
                             </div>
                             <div class="channelHeaderCTA gZuxBC">
                                 <a href="#" class="bGwznd">
@@ -219,7 +214,7 @@
                                                     <div class="csvICB">
                                                         <svg width="36" height="36" viewBox="0 0 32 32">
                                                             <foreignObject x="0" y="0" width="32" height="32">
-                                                                <img src="<%- message.user.ownPfp %>" alt="<%- message.user.username %>'s pfp" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                                                <img src="<%- message.user.ownPfp || '/assets/1759430838.png' %>" alt="<%- message.user.username %>'s pfp" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                                                             </foreignObject>
                                                         </svg>
                                                     </div>
@@ -251,7 +246,7 @@
                                         </a>
                                     </div>
                                     <div class="messageBoxTextarea">
-                                        <textarea name="" id="userprompt" maxlength="2000" placeholder="Message #welcome">ass</textarea>
+                                        <textarea name="" id="userprompt" maxlength="2000" placeholder="Message #<%- channelName || 'welcome' %>"></textarea>
                                         <div class="textAreaAutoResize">
                                             <div style="padding: 14px 14px 14px 0;"></div>
                                         </div>
@@ -281,5 +276,9 @@
         </div>
     </div>
     <%- include('../partials/createModal') %>
+    <% if (channelId) { %>
+    <div id="chat-context" data-channel-id="<%= channelId %>" data-username="<%- username %>" data-own-pfp="<%- ownPfp %>" hidden></div>
+    <script src="/js/chat.js"></script>
+    <% } %>
 </body>
 </html>
