@@ -5,33 +5,56 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const globals = JSON.parse(fs.readFileSync('globals.json', 'utf8'));
 const { version } = require('./package.json');
-const sqlite3 = require('sqlite3').verbose();
+const db = require('./database/helpers');
+const apiRoutes = require('./routes/api');
 
 const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// Session configuration
 app.use(session({
     secret: globals.sessionKey,
     resave: true,
     saveUninitialized: false,
     name: 'connect.sid',
     cookie: {
-        secure: false,                  // Set to true if you use a valid SSL certificate for HTTPS
+        secure: false,
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,    // 24 hours
+        maxAge: 24 * 60 * 60 * 1000,
         path: '/',
-        sameSite: 'lax'                 // Added for security
+        sameSite: 'lax'
     },
-    rolling: true                       // Refresh session with each request
+    rolling: true
 }));
 
 // Static files and views
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+// API routes
+app.use('/api', apiRoutes);
+
+// Simple in-memory cache for Hydraulisc user display info
+const userCache = new Map();
+const USER_CACHE_TTL = 5 * 60 * 1000;
+
+async function resolveUser(userId) {
+    const cached = userCache.get(userId);
+    if (cached && Date.now() - cached.ts < USER_CACHE_TTL) return cached.data;
+
+    // Placeholder until Hydraulisc API is wired
+    const data = { uid: userId, username: `User#${userId}`, ownPfp: null };
+    userCache.set(userId, { data, ts: Date.now() });
+    return data;
+}
+
+// DEV ONLY — fake login to test without OAuth
+app.get('/dev-login', (req, res) => {
+    req.session.user = { id: 1 };
+    res.json({ message: 'Logged in as user 1', user: req.session.user });
+});
 
 // Onboarding
 app.get('/', async (req, res) => {
@@ -50,7 +73,7 @@ app.get('/', async (req, res) => {
     }
 })
 
-// Settings (?)
+// Settings
 app.get('/settings', async (req, res) => {
     try {
         res.render('pages/settings', {
@@ -77,29 +100,100 @@ app.get('/register', async (req, res) => {
     })
 })
 
-app.get('/test', async (req, res) => {
-    const user = {uid: '1', username: 'SleepingAmi', ownPfp: 'https://hydraulisc.net/avatars/b7fc18398b37dcc25f21e1c2745fca7d'}
+// Server view — real data
+app.get('/server/:serverId', async (req, res) => {
     try {
+        const user = req.session.user;
+        if (!user) return res.redirect('/register?next=' + encodeURIComponent(req.originalUrl));
+
+        const server = db.getServer(req.params.serverId);
+        if (!server) return res.render('pages/404');
+        if (!db.isMember(server.id, user.id)) return res.render('pages/404');
+
+        const channels = db.getChannelsForServer(server.id);
+        const firstChannel = channels[0];
+        if (firstChannel) {
+            return res.redirect(`/server/${server.id}/channel/${firstChannel.id}`);
+        }
+
+        // Server with no channels — render empty
+        const userServers = db.getServersForUser(user.id);
+        const resolvedUser = await resolveUser(user.id);
+
         res.render('pages/app', {
-            username: user.username,
-            uid: user.uid,
-            ownPfp: user.ownPfp,
+            username: resolvedUser.username,
+            uid: resolvedUser.uid,
+            ownPfp: resolvedUser.ownPfp,
             title: globals.title,
             bannerURL: globals.bannerURL,
             shortDescription: globals.shortDescription,
             kofiURL: globals.kofiURL,
-            servers: [],//[ { id: "server_1", icon: "https://raw.githubusercontent.com/catppuccin/catppuccin/refs/heads/main/assets/palette/circles/latte_red.png", name: "red", unread: true }, { id: "server_2", icon: "https://raw.githubusercontent.com/catppuccin/catppuccin/refs/heads/main/assets/palette/circles/latte_yellow.png", name: "yellow", unread: false }, { id: "server_3", icon: "https://raw.githubusercontent.com/catppuccin/catppuccin/refs/heads/main/assets/palette/circles/latte_green.png", name: "green", unread: false }, { id: "server_4", icon: "https://raw.githubusercontent.com/catppuccin/catppuccin/refs/heads/main/assets/palette/circles/latte_blue.png", name: "blue", unread: true }, { id: "server_5", icon: "https://raw.githubusercontent.com/catppuccin/catppuccin/refs/heads/main/assets/palette/circles/frappe_yellow.png", name: "extra", unread: true } ],
-            channels: [ { id: "channel_1", name: "general", unread: true }, { id: "channel_2", name: "off-topic", unread: false }, { id: "channel_3", name: "polls", unread: false }, { id: "channel_4", name: "media", unread: true }, { id: "channel_5", name: "extra", unread: true } ],
-            channelMessages: [ { id: "message_1", "user": user, content: "if you are reading this", unread: false }, { id: "message_2", "user": user, content: "then dummy test messages work", unread: false }, { id: "message_3", "user": user, content: "these messages are in reverse", unread: false }, { id: "message_4", "user": user, content: "because the database", unread: true }, { id: "message_5", "user": user, content: "doesn't exist", unread: true }, { id: "message_2", "user": user, content: "then dummy test messages work", unread: true }, { id: "message_3", "user": user, content: "these messages are in reverse", unread: true }, { id: "message_3", "user": user, content: "because the database", unread: true }, { id: "message_3", "user": user, content: "doesn't exist", unread: true }, { id: "message_2", "user": user, content: "then dummy test messages work", unread: true }, { id: "message_3", "user": user, content: "What happens if we have an asurdly long message in chat? Like, do the lines wrap, or does it go into a full overflow? I guess I'll just have to find out the hard way, typing this absurdly long message, huh? Well, that answers that.", unread: true } ]
-        })
-    } catch(err) {
-        res.render('pages/404')
+            serverId: server.id,
+            serverName: server.name,
+            channelId: null,
+            channelName: null,
+            servers: userServers.map(s => ({ id: s.id, icon: s.icon, name: s.name, unread: false })),
+            channels: channels.map(c => ({ id: c.id, name: c.name, unread: false })),
+            channelMessages: []
+        });
+    } catch (err) {
+        res.render('pages/404');
     }
-})
+});
+
+app.get('/server/:serverId/channel/:channelId', async (req, res) => {
+    try {
+        const user = req.session.user;
+        if (!user) return res.redirect('/register?next=' + encodeURIComponent(req.originalUrl));
+
+        const server = db.getServer(req.params.serverId);
+        if (!server) return res.render('pages/404');
+        if (!db.isMember(server.id, user.id)) return res.render('pages/404');
+
+        const channel = db.getChannel(req.params.channelId);
+        if (!channel || channel.server_id !== server.id) return res.render('pages/404');
+
+        const channels = db.getChannelsForServer(server.id);
+        const rawMessages = db.getMessages(channel.id, 50);
+        const userServers = db.getServersForUser(user.id);
+        const resolvedUser = await resolveUser(user.id);
+
+        // Resolve user info for each message
+        const channelMessages = await Promise.all(
+            rawMessages.reverse().map(async (m) => {
+                const msgUser = await resolveUser(m.user_id);
+                return {
+                    id: m.id,
+                    user: { uid: msgUser.uid, username: msgUser.username, ownPfp: msgUser.ownPfp },
+                    content: m.content,
+                    unread: false
+                };
+            })
+        );
+
+        res.render('pages/app', {
+            username: resolvedUser.username,
+            uid: resolvedUser.uid,
+            ownPfp: resolvedUser.ownPfp,
+            title: globals.title,
+            bannerURL: globals.bannerURL,
+            shortDescription: globals.shortDescription,
+            kofiURL: globals.kofiURL,
+            serverId: server.id,
+            serverName: server.name,
+            channelId: channel.id,
+            channelName: channel.name,
+            servers: userServers.map(s => ({ id: s.id, icon: s.icon, name: s.name, unread: false })),
+            channels: channels.map(c => ({ id: c.id, name: c.name, unread: false })),
+            channelMessages
+        });
+    } catch (err) {
+        res.render('pages/404');
+    }
+});
 
 // Start server
 const PORT = globals.hostPort || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
-    // initializeDatabase(); // Initialize the database when the server starts
 });
