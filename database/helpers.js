@@ -39,6 +39,19 @@ function getServersForUser(userId) {
     ).all(userId);
 }
 
+function updateServer(id, userId, { name, icon }) {
+    const sets = [];
+    const params = [];
+    if (name !== undefined) { sets.push('name = ?'); params.push(name); }
+    if (icon !== undefined) { sets.push('icon = ?'); params.push(icon); }
+    if (sets.length === 0) return false;
+    params.push(id, userId);
+    const result = db.prepare(
+        `UPDATE servers SET ${sets.join(', ')} WHERE id = ? AND owner_id = ?`
+    ).run(...params);
+    return result.changes > 0;
+}
+
 function deleteServer(id, userId) {
     const result = db.prepare(
         'DELETE FROM servers WHERE id = ? AND owner_id = ?'
@@ -73,6 +86,22 @@ function deleteChannel(id) {
 
 function getChannel(id) {
     return db.prepare('SELECT * FROM channels WHERE id = ?').get(id);
+}
+
+function updateChannel(id, name) {
+    const result = db.prepare('UPDATE channels SET name = ? WHERE id = ?').run(name, id);
+    return result.changes > 0;
+}
+
+const reorderChannels = db.transaction((serverId, orderedIds) => {
+    const stmt = db.prepare('UPDATE channels SET position = ? WHERE id = ? AND server_id = ?');
+    for (let i = 0; i < orderedIds.length; i++) {
+        stmt.run(i, orderedIds[i], serverId);
+    }
+});
+
+function channelCount(serverId) {
+    return db.prepare('SELECT COUNT(*) AS count FROM channels WHERE server_id = ?').get(serverId).count;
 }
 
 // Messages
@@ -154,15 +183,26 @@ function isMember(serverId, userId) {
     ).get(serverId, userId);
 }
 
+function removeMember(serverId, userId) {
+    const result = db.prepare(
+        'DELETE FROM memberships WHERE server_id = ? AND user_id = ?'
+    ).run(serverId, userId);
+    return result.changes > 0;
+}
+
 module.exports = {
     createServer,
     getServer,
     getServersForUser,
+    updateServer,
     deleteServer,
     createChannel,
     getChannelsForServer,
     deleteChannel,
     getChannel,
+    updateChannel,
+    reorderChannels,
+    channelCount,
     createMessage,
     getMessages,
     editMessage,
@@ -173,4 +213,5 @@ module.exports = {
     leaveServer,
     getMembers,
     isMember,
+    removeMember,
 };

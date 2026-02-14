@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { sanitize } = require('../middleware/sanitize');
 const db = require('../database/helpers');
+const { resolveUser } = require('../utils/resolveUser');
 
 function requireAuth(req, res, next) {
     if (!req.session.user?.id) return res.status(401).json({ error: 'Unauthorized' });
@@ -23,6 +24,27 @@ router.post('/servers', (req, res) => {
 router.get('/servers', (req, res) => {
     const servers = db.getServersForUser(req.session.user.id);
     res.json(servers);
+});
+
+router.patch('/servers/:serverId', (req, res) => {
+    const server = db.getServer(req.params.serverId);
+    if (!server) return res.status(404).json({ error: 'Server not found' });
+    if (server.owner_id !== req.session.user.id) return res.status(403).json({ error: 'Forbidden' });
+
+    const fields = {};
+    if (req.body.name !== undefined) {
+        const name = sanitize((req.body.name || '').trim());
+        if (!name || name.length > 100) return res.status(400).json({ error: 'Invalid server name' });
+        fields.name = name;
+    }
+    if (req.body.icon !== undefined) {
+        fields.icon = req.body.icon ? sanitize(req.body.icon.trim()) : null;
+    }
+    if (Object.keys(fields).length === 0) return res.status(400).json({ error: 'No fields to update' });
+
+    const updated = db.updateServer(req.params.serverId, req.session.user.id, fields);
+    if (!updated) return res.status(500).json({ error: 'Update failed' });
+    res.json({ success: true, ...fields });
 });
 
 router.delete('/servers/:serverId', (req, res) => {
@@ -52,6 +74,23 @@ router.get('/servers/:serverId/channels', (req, res) => {
     res.json(channels);
 });
 
+router.patch('/channels/:channelId', (req, res) => {
+    const channel = db.getChannel(req.params.channelId);
+    if (!channel) return res.status(404).json({ error: 'Channel not found' });
+
+    const server = db.getServer(channel.server_id);
+    if (!server || server.owner_id !== req.session.user.id) {
+        return res.status(403).json({ error: 'Forbidden' });
+    }
+
+    const name = sanitize((req.body.name || '').trim());
+    if (!name || name.length > 100) return res.status(400).json({ error: 'Invalid channel name' });
+
+    const updated = db.updateChannel(req.params.channelId, name);
+    if (!updated) return res.status(500).json({ error: 'Update failed' });
+    res.json({ success: true, name });
+});
+
 router.delete('/channels/:channelId', (req, res) => {
     const channel = db.getChannel(req.params.channelId);
     if (!channel) return res.status(404).json({ error: 'Channel not found' });
@@ -61,7 +100,31 @@ router.delete('/channels/:channelId', (req, res) => {
         return res.status(403).json({ error: 'Forbidden' });
     }
 
+    if (db.channelCount(channel.server_id) <= 1) {
+        return res.status(400).json({ error: 'Cannot delete the last channel' });
+    }
+
     db.deleteChannel(req.params.channelId);
+    res.json({ success: true });
+});
+
+router.patch('/servers/:serverId/channels/reorder', (req, res) => {
+    const server = db.getServer(req.params.serverId);
+    if (!server) return res.status(404).json({ error: 'Server not found' });
+    if (server.owner_id !== req.session.user.id) return res.status(403).json({ error: 'Forbidden' });
+
+    const orderedIds = req.body.orderedIds;
+    if (!Array.isArray(orderedIds) || orderedIds.length === 0) {
+        return res.status(400).json({ error: 'Invalid channel order' });
+    }
+
+    const existing = db.getChannelsForServer(req.params.serverId);
+    const existingIds = new Set(existing.map(c => c.id));
+    if (orderedIds.length !== existingIds.size || !orderedIds.every(id => existingIds.has(id))) {
+        return res.status(400).json({ error: 'Channel list mismatch' });
+    }
+
+    db.reorderChannels(req.params.serverId, orderedIds);
     res.json({ success: true });
 });
 
@@ -127,6 +190,42 @@ router.delete('/messages/:messageId', (req, res) => {
 });
 
 // Memberships
+router.get('/servers/:serverId/members', async (req, res) => {
+    const server = db.getServer(req.params.serverId);
+    if (!server) return res.status(404).json({ error: 'Server not found' });
+    if (!db.isMember(req.params.serverId, req.session.user.id)) {
+        return res.status(403).json({ error: 'Not a member' });
+    }
+
+    const memberships = db.getMembers(req.params.serverId);
+    const members = await Promise.all(memberships.map(async (m) => {
+        const user = await resolveUser(m.user_id);
+        return {
+            userId: m.user_id,
+            username: user.username,
+            ownPfp: user.ownPfp,
+            joinedAt: m.joined_at,
+            isOwner: m.user_id === server.owner_id
+        };
+    }));
+    res.json(members);
+});
+
+router.delete('/servers/:serverId/members/:userId', (req, res) => {
+    const server = db.getServer(req.params.serverId);
+    if (!server) return res.status(404).json({ error: 'Server not found' });
+    if (server.owner_id !== req.session.user.id) return res.status(403).json({ error: 'Forbidden' });
+
+    const targetUserId = parseInt(req.params.userId, 10);
+    if (targetUserId === server.owner_id) {
+        return res.status(400).json({ error: 'Cannot kick the server owner' });
+    }
+
+    const removed = db.removeMember(req.params.serverId, targetUserId);
+    if (!removed) return res.status(404).json({ error: 'Member not found' });
+    res.json({ success: true });
+});
+
 router.post('/servers/:serverId/join', (req, res) => {
     const server = db.getServer(req.params.serverId);
     if (!server) return res.status(404).json({ error: 'Server not found' });

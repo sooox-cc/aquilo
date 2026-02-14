@@ -1,0 +1,69 @@
+<div id="server-settings-overlay" data-server-id="<%= serverId %>" data-is-owner="<%= isOwner %>">
+    <div class="ss-panel">
+        <nav class="ss-nav">
+            <a href="#" data-section="ss-overview" class="active">Overview</a>
+            <a href="#" data-section="ss-channels">Channels</a>
+            <a href="#" data-section="ss-members">Members</a>
+            <% if (isOwner) { %>
+            <a href="#" data-section="ss-danger" class="ss-nav-danger">Danger Zone</a>
+            <% } %>
+        </nav>
+        <div class="ss-content">
+            <!-- Overview -->
+            <div id="ss-overview" class="ss-section active">
+                <h2>Server Overview</h2>
+                <div class="ss-field">
+                    <label for="ss-server-name">Server Name</label>
+                    <input type="text" id="ss-server-name" value="<%- serverName %>" maxlength="100" <% if (!isOwner) { %>disabled<% } %>>
+                </div>
+                <div class="ss-field">
+                    <label for="ss-server-icon">Icon URL</label>
+                    <input type="text" id="ss-server-icon" placeholder="https://example.com/icon.png" maxlength="500" <% if (!isOwner) { %>disabled<% } %>>
+                </div>
+                <% if (isOwner) { %>
+                <div>
+                    <button class="ss-btn" id="ss-save-overview">Save Changes</button>
+                    <span class="ss-status" id="ss-overview-status"></span>
+                </div>
+                <% } %>
+            </div>
+
+            <!-- Channels -->
+            <div id="ss-channels" class="ss-section">
+                <h2>Channels</h2>
+                <div class="ss-channel-list" id="ss-channel-list"></div>
+                <% if (isOwner) { %>
+                <div class="ss-create-row">
+                    <input type="text" id="ss-new-channel-name" placeholder="New channel name" maxlength="100">
+                    <button class="ss-btn" id="ss-create-channel">Create</button>
+                </div>
+                <% } %>
+                <span class="ss-status" id="ss-channels-status"></span>
+            </div>
+
+            <!-- Members -->
+            <div id="ss-members" class="ss-section">
+                <h2>Members</h2>
+                <div class="ss-member-list" id="ss-member-list"></div>
+                <span class="ss-status" id="ss-members-status"></span>
+            </div>
+
+            <!-- Danger Zone (owner only) -->
+            <% if (isOwner) { %>
+            <div id="ss-danger" class="ss-section">
+                <h2>Danger Zone</h2>
+                <div class="ss-danger-zone">
+                    <p>Deleting a server is permanent. All channels, messages, and memberships will be lost.</p>
+                    <div class="ss-field">
+                        <label for="ss-confirm-delete">Type the server name to confirm:</label>
+                        <input type="text" class="ss-confirm-input" id="ss-confirm-delete" placeholder="<%- serverName %>">
+                    </div>
+                    <div>
+                        <button class="ss-btn ss-btn-danger" id="ss-delete-server" disabled>Delete Server</button>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</div>
