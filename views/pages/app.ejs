@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="/assets/favicon.webp">
     <link rel="stylesheet" href="/css/appStyles.css">
     <link rel="stylesheet" href="/css/messagesStyle.css">
+    <link rel="stylesheet" href="/css/serverSettingsStyles.css">
     <script src="/js/themeSelector.js"></script>
 </head>
 <body>
@@ -276,6 +277,11 @@
         </div>
     </div>
     <%- include('../partials/createModal') %>
+    <% if (serverId) { %>
+    <%- include('../partials/serverSettings') %>
+    <script src="/js/vendor/Sortable.min.js"></script>
+    <script src="/js/serverSettings.js"></script>
+    <% } %>
     <% if (channelId) { %>
     <div id="chat-context" data-channel-id="<%= channelId %>" data-username="<%- username %>" data-own-pfp="<%- ownPfp %>" hidden></div>
     <script src="/js/chat.js"></script>

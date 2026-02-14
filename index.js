@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const globals = JSON.parse(fs.readFileSync('globals.json', 'utf8'));
 const { version } = require('./package.json');
 const db = require('./database/helpers');
+const { resolveUser } = require('./utils/resolveUser');
 const apiRoutes = require('./routes/api');
 
 const app = express();
@@ -35,20 +36,6 @@ app.set('views', path.join(__dirname, 'views'));
 
 // API routes
 app.use('/api', apiRoutes);
-
-// Simple in-memory cache for Hydraulisc user display info
-const userCache = new Map();
-const USER_CACHE_TTL = 5 * 60 * 1000;
-
-async function resolveUser(userId) {
-    const cached = userCache.get(userId);
-    if (cached && Date.now() - cached.ts < USER_CACHE_TTL) return cached.data;
-
-    // Placeholder until Hydraulisc API is wired
-    const data = { uid: userId, username: `User#${userId}`, ownPfp: null };
-    userCache.set(userId, { data, ts: Date.now() });
-    return data;
-}
 
 // DEV ONLY — fake login to test without OAuth
 app.get('/dev-login', (req, res) => {
@@ -134,7 +121,8 @@ app.get('/server/:serverId', async (req, res) => {
             channelName: null,
             servers: userServers.map(s => ({ id: s.id, icon: s.icon, name: s.name, unread: false })),
             channels: channels.map(c => ({ id: c.id, name: c.name, unread: false })),
-            channelMessages: []
+            channelMessages: [],
+            isOwner: server.owner_id === user.id
         });
     } catch (err) {
         res.render('pages/404');
@@ -185,7 +173,8 @@ app.get('/server/:serverId/channel/:channelId', async (req, res) => {
             channelName: channel.name,
             servers: userServers.map(s => ({ id: s.id, icon: s.icon, name: s.name, unread: false })),
             channels: channels.map(c => ({ id: c.id, name: c.name, unread: false })),
-            channelMessages
+            channelMessages,
+            isOwner: server.owner_id === user.id
         });
     } catch (err) {
         res.render('pages/404');
