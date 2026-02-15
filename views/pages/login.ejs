@@ -20,18 +20,12 @@
                                 <img src="/assets/1000044733-lowres.png" style="width: 25%; height: auto;">
                             </div>
                             <div class="title">register on <%- title %></div>
-                            <div class="subtitle">Create your account. Connect on your terms.</div>
-                            <div class="authswitch">Already have an account? <a style="color: inherit;" href="/login">Login</a>.</div>
+                            <div class="subtitle">Login to continue.</div>
+                            <div class="authswitch">Need an account? <a style="color: inherit;" href="https://hydraulisc.net/register" target="_blank">Register on Hydraulisc</a>.</div>
                             <div>
-                                <form action="/auth/register" method="post" id="register-form">
+                                <form action="/oauth/login" method="get" id="register-form">
                                     <div class="formItemContainer">
-                                        <input class="formInput" type="text" name="username" placeholder="Username">
-                                    </div>
-                                    <div class="formItemContainer">
-                                        <input class="formInput" type="password" name="password" placeholder="Password" autocomplete="off">
-                                    </div>
-                                    <div class="formItemContainer">
-                                        <button class="formButton" type="submit">Register</button>
+                                        <button class="formButton" type="submit">Login</button>
                                     </div>
                                 </form>
                             </div>

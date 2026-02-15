@@ -8,6 +8,7 @@ const { version } = require('./package.json');
 const db = require('./database/helpers');
 const { resolveUser } = require('./utils/resolveUser');
 const apiRoutes = require('./routes/api');
+const oauthRoutes = require('./routes/oauth');
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // API routes
 app.use('/api', apiRoutes);
+app.use('/oauth', oauthRoutes);
 
 // DEV ONLY — fake login to test without OAuth
 app.get('/dev-login', (req, res) => {
@@ -77,11 +79,11 @@ app.get('/settings', async (req, res) => {
     }
 })
 
-app.get('/register', async (req, res) => {
+app.get('/login', async (req, res) => {
     const redirectTo = req.query.next && req.query.next.startsWith('/')
     ? req.query.next
     : '/';
-    res.render('pages/register', {
+    res.render('pages/login', {
         title: globals.title,
         next: redirectTo
     })
