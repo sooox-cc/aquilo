@@ -1,0 +1,193 @@
+:root {
+    --bg-color: #100E09;            /* Premium Black */
+    --bg-secondary: #0B0B0Baa;      /* Neutral Black (translucent) */
+    --text-color: #d7d9e0;          /* Haulisc White (variation of Designer White) */
+    --text-secondary: #acadb3;      /* What? */
+    --accent-color: #8086d4;        /* Haulisc Light Blue (variation) */
+    --accent-secondary: #5464c7;    /* Haulisc Blue (variation) */
+    --accent-terciary: #5667c7ae;   /* Haulisc Blue (transparent) */
+    --nav-bg: #181512;              /* Variation of All Black */
+    --button-bg: #8086d4;           /* Haulisc Light Blue (variation) */
+    --button-text: #d7d9e0;         /* Haulisc White (variation of Designer White) */
+}
+
+[data-theme="light"] {
+    --bg-color: #f8f9fb;
+    --bg-secondary: #eef0f1aa;
+    --text-color: #1a1a1a;
+    --text-secondary: #474747;
+    --accent-color: #5464c7;
+    --accent-secondary: #8086d4;
+    --accent-terciary: #5464c7ae;
+    --nav-bg: #ffffff;
+    --button-bg: #5464c7;
+    --button-text: #ffffff;
+}
+
+body {
+    background: var(--nav-bg);
+    color: var(--text-color);
+    font-family: "Inter", sans-serif;
+    line-height: 1.5;
+    margin: 0;
+    height: 100vh;
+    caret-color: var(--accent-color);
+}
+
+.frame {
+    max-width: 1888px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.tab-spacer {
+    padding: 6px 4px 18px;
+}
+
+.panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--bg-color);
+    border-radius: 4px;
+    overflow: hidden;
+    min-height: 90svh;
+}
+
+.mobile_display_override {
+    display: none;
+}
+
+.panel-left {
+    padding: 56px 64px;
+    background: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-right {
+    padding: 56px 64px;
+    background: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    margin-bottom: 100px;
+}
+
+.brand-dot {
+    width: 9px;
+    height: 9px;
+    background: var(--accent-color);
+    border-radius: 1px;
+}
+
+.hero {
+    font-weight: 800;
+    font-size: 110px;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin: 0 0 28px;
+}
+
+.subtext {
+    max-width: 480px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 56px;
+}
+
+.card {
+    width: 100%;
+    max-width: 480px;
+    background: transparent;
+    border: 1px solid var(--nav-bg);
+    border-radius: 10px;
+    padding: 40px 42px 36px;
+}
+
+.card-title {
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0 0 32px;
+}
+
+.submit-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(160deg, var(--accent-terciary) 0%, var(--accent-color) 100%);
+    border: none;
+    border-radius: 6px;
+    padding: 16px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.03em;
+    color: #241a10;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: filter 0.15s ease;
+}
+
+.submit-btn:hover {
+    filter: brightness(1.15);
+}
+
+.submit-btn:active {
+    filter: brightness(0.97);
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid var(--nav-bg);
+    margin: 28px 0 20px;
+}
+
+.legal {
+    text-transform: uppercase;
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+a {
+    color: var(--accent-secondary);
+    text-decoration: underline;
+}
+
+@media screen and (max-width: 900px) {
+    .panel {
+        grid-template-columns: 1fr;
+    }
+    .panel-left {
+        display: none;   
+    }
+    .panel-right {
+        padding: 40px 28px;
+    }
+    .mobile_display_override {
+        display: flex;
+    }
+    .hero {
+        font-size: 64px;
+    }
+
+    .panel-right {
+        justify-content: stretch;
+    }
+
+    .card {
+        max-width: none;
+    }
+}

@@ -5,36 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/assets/favicon.webp" type="image/x-icon">
     <link rel="icon" type="image/png" href="/assets/favicon.webp">
-    <title>Register | Aquilo</title>
-    <link rel="stylesheet" href="/css/authStyles.css">
+    <title>Sign In | Aquilo</title>
+    <link rel="stylesheet" href="/css/loginPageStyles.css">
     <script src="/js/themeSelector.js"></script>
 </head>
 <body>
-    <div id="root">
-        <div class="registerContainer">
-            <div class="registerPage">
-                <div class="register">
-                    <div class="dynamicRegister">
-                        <div class="login" style="min-height: auto; width: auto !important;">
-                            <div class="bannerDisplay">
-                                <img src="/assets/1000044733-lowres.png" style="width: 25%; height: auto;">
-                            </div>
-                            <div class="title">register on <%- title %></div>
-                            <div class="subtitle">Login to continue.</div>
-                            <div class="authswitch">Need an account? <a style="color: inherit;" href="https://hydraulisc.net/register" target="_blank">Register on Hydraulisc</a>.</div>
-                            <div>
-                                <form action="/oauth/login?next=<%= next %>" method="get" id="register-form">
-                                    <div class="formItemContainer">
-                                        <button class="formButton" type="submit">Login</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="formItemContainer">
-                                <div class="authswitch">By signing up, you agree to our <a href="/example" style="color: inherit;">Terms of Service</a>, <a href="/example" style="color: inherit;">Privacy Policy</a> and <a href="/example" style="color: inherit;">Community Guidelines</a>.</div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="frame">
+        <div class="tab-spacer"></div>
+        <div class="panel">
+            <div class="panel-left">
+                <div class="brand">
+                    <span class="brand-dot"></span>
+                    AQUILO
                 </div>
+                <h1 class="hero">OAUTH</h1>
+                <p class="subtext">
+                    Aquilo uses OAuth to collect as little data about you as possible. Furthermore, we use <a href="https://github.com/sooox-cc/pgp-verification" target="_blank" rel="noopener noreferrer">PGP-As-Verification</a> technologies for Multi-Factor Authentication, encryption, and to confirm you're the key-holder.
+                </p>
+            </div>
+            <div class="mobile_display_override">
+                <div class="brand">
+                    <span class="brand-dot"></span>
+                    AQUILO
+                </div>
+            </div>
+            <div class="panel-right">
+                <form action="/oauth/login?next=<%= next %>" method="get" class="card" id="register-form">
+                    <div class="tab-spacer"></div>
+                    <h2 class="card-title">Sign in to your account</h2>
+                    <button type="submit" class="submit-btn">
+                        LOGIN ON HYDRAULISC
+                        <span aria-hidden="true">→</span>
+                    </button>
+                    <div class="tab-spacer"></div>
+                    <div class="legal not-really">Need an account? <a href="https://hydraulisc.net/register" target="_blank" rel="noopener noreferrer">Sign up on Hydraulisc</a>. It's free, and KYC-less!</div>
+                    <hr class="divider">
+                    <div class="legal">
+                        by continuing, you agree you have read and understood our <a href="/canary">warrant canary</a>, and agree to abide by our <a href="about:blank">terms of service</a> and <a href="about:blank">privacy policy</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
